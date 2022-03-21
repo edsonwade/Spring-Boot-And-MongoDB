@@ -1,22 +1,33 @@
 package com.example.springbootandmongodb.persistence.model;
 
-import lombok.Data;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
-@Entity
-@Data
-@NoArgsConstructor
 
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@Document(collection = "users")
 public class User implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column
+    private String id;
     private String name;
-    @Column
-    @UniqueElements
-    private String  email;
+    @Indexed(unique = true)
+    private String email;
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }
