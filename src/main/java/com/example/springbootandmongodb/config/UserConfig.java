@@ -16,11 +16,11 @@ public class UserConfig {
     CommandLineRunner runner(UserRepository userRepository) {
         return args -> {
             List<User> users = Arrays.asList(
-                    new User("Maria", "maria@test1.com"),
-                    new User("Pinto", "pinto@test2.pt")
+                    new User("Amadis", "amadis@test6.pt"),
+                    new User("joão souza", "js@test7.pt")
 
             );
-            userRepository.insert(users);
+            userRepository.saveAll(users);
         };
     }
 }
