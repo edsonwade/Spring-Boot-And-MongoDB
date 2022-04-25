@@ -12,6 +12,9 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 @EnableMongoRepositories(basePackageClasses = UserRepository.class)
 @EnableJpaRepositories(excludeFilters =
@@ -20,14 +23,21 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class SpringBootAndMongoDbApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(SpringBootAndMongoDbApplication.class, args);
     }
 
     @Bean
     CommandLineRunner runner(UserRepository userRepository) {
         return args -> {
-            User user = new User("Vanilson wayne", "edson@edson.com");
-            userRepository.insert(user);
+            //User user = new User("Vanilson wayne", "edson@edson.com");
+            List<User> users = Arrays.asList(
+                    new User("Mauro", "mauro@test1"),
+                    new User("Rui Pinto", "ruipinto@test2"),
+                    new User("Leonildo", "leonildo@example.com"),
+                    new User("Nadia", "nadia@test3.ao")
+            );
+            userRepository.insert(users);
         };
     }
 }
