@@ -1,0 +1,21 @@
+ private  final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+public Optional<User> findById(String id) {
+        Optional<User>users = userRepository.findById(id);
+
+        if(users.isPresent()){
+            logger.info("user id founded " + id);
+            return users;
+        }
+        logger.error(" user not found " + id);
+        throw new UserNotFoundException();
+
+    }
+
+    exception with message
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class UserNotFoundException extends RuntimeException {
+        public UserNotFoundException(String message) {
+            super(message);
+        }
+    }
