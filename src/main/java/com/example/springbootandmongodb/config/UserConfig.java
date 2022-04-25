@@ -20,7 +20,7 @@ public class UserConfig {
                     new User("joão souza", "js@test7.pt")
 
             );
-            userRepository.saveAll(users);
+            //userRepository.saveAll(users);
         };
     }
 }
