@@ -16,12 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path= "/api/v1")
+@RequestMapping(path = "/api/v1")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
 
 
     @GetMapping(value = "users")
@@ -37,29 +36,31 @@ public class UserController {
 
     @GetMapping(value = "users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<User>findUserById( @PathVariable(value="id") String id) {
+    public ResponseEntity<User> findUserById(@Valid @PathVariable(value = "id") String id) {
         Optional<User> users = userService.findById(id);
         return users.map(user -> ResponseEntity.ok().body(user)).
                 orElseGet(()
-                -> ResponseEntity.
+                        -> ResponseEntity.
                         status(HttpStatus.NOT_FOUND).
                         body(null));
 
 
     }
+
     @GetMapping(value = "users/email/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<User>findUserByEmail(@Valid @PathVariable(value="email") String email) {
+    public ResponseEntity<User> findUserByEmail(@Valid @PathVariable(value = "email") String email) {
         Optional<User> users = userService.findByEmail(email);
         return users.map(user -> ResponseEntity.ok().body(user)).
                 orElseGet(()
-                -> ResponseEntity.
+                        -> ResponseEntity.
                         status(HttpStatus.NOT_FOUND).
                         body(null));
     }
+
     @PostMapping(value = "users/create/newuser")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void>createNewUser(@Valid @RequestBody UserDTO user) {
+    public ResponseEntity<Void> createNewUser(@Valid @RequestBody UserDTO user) {
         User users = userService.fromDTO(user);
         users = userService.createNewUser(users);
 
@@ -74,6 +75,11 @@ public class UserController {
     }
 
 
+    @DeleteMapping(value = "users/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable(value = "id") String id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
