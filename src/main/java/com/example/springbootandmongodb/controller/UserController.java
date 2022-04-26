@@ -73,7 +73,14 @@ public class UserController {
         return ResponseEntity.created(uri).build();
 
     }
-
+    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping(value="users/create/{id}")
+    public ResponseEntity<Void>update(@PathVariable String id , @RequestBody UserDTO user){
+        User users = userService.fromDTO(user);
+        users.setId(id);
+        users = userService.update(users);
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping(value = "users/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable(value = "id") String id) {

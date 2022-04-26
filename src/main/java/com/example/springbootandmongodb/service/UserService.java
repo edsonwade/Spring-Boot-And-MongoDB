@@ -5,6 +5,8 @@ import com.example.springbootandmongodb.exception.UserNotFoundException;
 import com.example.springbootandmongodb.persistence.model.User;
 import com.example.springbootandmongodb.persistence.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 
@@ -40,6 +43,24 @@ public class UserService {
 
     public User createNewUser(User user) {
         return userRepository.insert(user);
+    }
+
+    public User update(User user) {
+
+        User users = userRepository.findUserById(user.getId());
+
+        if (!(users.getId().equals(user.getId()))) {
+            logger.error("user not exist " + users.getId());
+            throw new UserNotFoundException(" user with id " + users.getId() + " no found ");
+        }
+        updateData(users, user);
+        logger.info("user update with success " + users.getId() + users.getName() + users.getEmail());
+        return userRepository.save(users);
+    }
+
+    public void updateData(User user, User newUser) {
+        user.setName(newUser.getName());
+        user.setEmail(newUser.getEmail());
     }
 
     public void deleteUser(String id) {
