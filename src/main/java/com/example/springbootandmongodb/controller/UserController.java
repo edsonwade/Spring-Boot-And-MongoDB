@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +37,7 @@ public class UserController {
 
     @GetMapping(value = "users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<User>findUserById( @PathVariable String id) {
+    public ResponseEntity<User>findUserById( @PathVariable(value="id") String id) {
         Optional<User> users = userService.findById(id);
         return users.map(user -> ResponseEntity.ok().body(user)).
                 orElseGet(()
@@ -45,6 +47,33 @@ public class UserController {
 
 
     }
+    @GetMapping(value = "users/email/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<User>findUserByEmail(@Valid @PathVariable(value="email") String email) {
+        Optional<User> users = userService.findByEmail(email);
+        return users.map(user -> ResponseEntity.ok().body(user)).
+                orElseGet(()
+                -> ResponseEntity.
+                        status(HttpStatus.NOT_FOUND).
+                        body(null));
+    }
+    @PostMapping(value = "users/create/newuser")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void>createNewUser(@Valid @RequestBody UserDTO user) {
+        User users = userService.fromDTO(user);
+        users = userService.createNewUser(users);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{id")
+                .buildAndExpand(users.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).build();
+
+    }
+
+
 
 
 }
